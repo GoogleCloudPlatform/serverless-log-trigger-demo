@@ -1,4 +1,16 @@
 
+### Overview
+This example demonstrates how a GCP network firewall rule change triggers a cloud function via pubsub and the function validates the rule.
+
+The cloud function takes a list of whitelisted rules from the environment variables. If a firewall rule is created or updated that has any violation, it would be deleted automatically in near real time (within seconds).
+
+
+Optionally, you can configure [Sendgrid](https://sendgrid.com/) to send an email notification to your email address.
+
+Please review the code for details.
+
+You can follow the instructions below in your cloud shell to test it.
+
 ### Enable needed service APIs:
 
 ```bash
@@ -18,7 +30,7 @@
   gcloud services enable cloudfunctions.googleapis.com
 ```
 
-### Grant permissions to servicre accounts
+### Grant permissions to service accounts
 
 ```bash
   PROJECT=$(gcloud config get-value project)
@@ -47,7 +59,7 @@ gcloud deployment-manager deployments create log-demo --config logging_func.yaml
 
 ```bash
 # Type y if asked to enable the service
-gcloud secrets create secret-id sendgrid-apikey --replication-policy="automatic"
+gcloud secrets create sendgrid-apikey --replication-policy="automatic"
 ```
 
 2. Add the API key value. 
@@ -58,7 +70,25 @@ gcloud secrets versions add "sendgrid-apikey" --data-file="/path/to/apikey_file"
 ```
 Or
 ```bash
-echo -n "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" | \
+echo -n "your sendgrid api key" | \
     gcloud secrets versions add "sendgrid-apikey" --data-file=-
 ```
 Ref: https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#secretmanager-add-secret-version-cli
+
+3. Add environment variables:
+
+NOTIFICATION_EMAIL(Required): Email address for the notification
+
+NOTIFICATION_SUBJECT(Optional): Email subject. The default is __Firewall violation detected__
+
+NOTIFICATION_SENDER(Optional): Email sender. The default is __No Reply<noreply@example.com>__
+
+You can update the deployment manager config file and update your deployment. Alternatively, you can add them via the Cloud Function console or run the following command:
+
+```bash
+gcloud functions deploy --update-env-vars=NOTIFICATION_EMAIL=shen.xiang@gmail.com,NOTIFICATION_SUBJECT='Test email',NOTIFICATION_SENDER='Reply<noreply@example.com>' logging-function
+```
+
+### License
+
+Apache 2.0 - See [LICENSE](LICENSE) for more information.
