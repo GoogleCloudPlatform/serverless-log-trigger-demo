@@ -53,6 +53,16 @@ sed -i -e "s/REPLACE_ME_PROJECT_ID/$PROJECT/" logging_func.yaml
 gcloud deployment-manager deployments create log-demo --config logging_func.yaml
 ```
 
+### Verify the result
+
+The default whitelist rules from the environment variables are:
+
+FIREWALL_WHITE_LIST1: "tcp:0.0.0.0/0:80,443"
+
+FIREWALL_WHITE_LIST2: "udp:0.0.0.0/0"
+
+You can create a new firewall rule with a violation such as opening the port 20 for 0.0.0.0/0. You will see the rule will be removed shortly.
+
 ### Enable email notification:
 
 1. Add Sendgrid API key to Secret Manager:
