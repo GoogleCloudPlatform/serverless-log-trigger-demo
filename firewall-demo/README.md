@@ -55,13 +55,13 @@ gcloud deployment-manager deployments create log-demo --config logging_func.yaml
 
 ### Verify the result
 
-The default whitelist rules from the environment variables are:
+The default whitelisted rules from the environment variables are:
 
 FIREWALL_WHITE_LIST1: "tcp:0.0.0.0/0:80,443"
 
 FIREWALL_WHITE_LIST2: "udp:0.0.0.0/0"
 
-You can create a new firewall rule with a violation such as opening the port 20 for 0.0.0.0/0. You will see the rule will be removed shortly.
+You can create a new firewall rule with a violation such as opening the port 20 for 0.0.0.0/0. You will see the rule being removed shortly.
 
 ### Enable email notification:
 
