@@ -35,6 +35,9 @@
 ### Deploy the cloud function:
 
 ```bash
+# set project id in the config file
+sed -i -e "s/REPLACE_ME_PROJECT_ID/$PROJECT/" logging_func.yaml
+# deploy
 gcloud deployment-manager deployments create log-demo --config logging_func.yaml
 ```
 
