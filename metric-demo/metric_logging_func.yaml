@@ -1,0 +1,46 @@
+imports:
+  - path: ../dm/logsink/logsink.py
+    name: logsink.py
+  - path: ../dm/cloudfunction/upload.py
+    name: upload.py
+  - path: ../dm/cloudfunction/cloud_function.py
+    name: cloud_function.py
+  - path: function_src/main.py
+  - path: function_src/requirements.txt
+
+resources:
+  - name: metric-logsink
+    type: logsink.py
+    properties:
+      projectId: shenxiang-gcp-solutions
+      # When using a PubSub topic, the value must be the topic ID. The ID must
+      # contain only letters (a-z, A-Z), numbers (0-9), or underscores (_).
+      # The maximum length is 1,024 characters.
+      destinationName: metric_log_pubsub_topic
+      destinationType: pubsub
+      uniqueWriterIdentity: true
+      # Change the filter as needed
+      filter: logName:(my-error-log)
+      # Properties for the pubsub destination to be created.
+      pubsubProperties:
+        topic: metric_log_pubsub_topic_dest
+  - name: metric-logging-function
+    metadata:
+      dependsOn:
+      - metric-logsink
+    type: cloud_function.py
+    properties:
+      region: us-central1
+      entryPoint: process_app_log
+      timeout: 90s
+      runtime: python37
+      availableMemoryMb: 512
+      triggerTopic: projects/shenxiang-gcp-solutions/topics/metric_log_pubsub_topic
+      environmentVariables:
+        PROJECT_ID: shenxiang-gcp-solutions
+        TARGET_LANGUAGE: en
+        SEARCH_PHRASE: "Execution error"
+        CUSTOM_METRIC_NAME: my-error-metric
+      localUploadPath: function_src
+      # sourceArchiveUrl: gs://your-precreated-bucket/cloud_logging.zip.
+      # If sourceArchiveUrl, a new bucket will be created for each deployment

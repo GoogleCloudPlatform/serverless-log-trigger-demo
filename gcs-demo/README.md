@@ -2,6 +2,8 @@
 ### Overview
 In this example, if a Cloud Storage bucket is open to public for read or write, the change will trigger a cloud function via pubsub. If the bucket is not in a whitelist(defined via an environment variable), the function will remove the IAM policy and make the bucket private.
 
+_Note: You can setup pubsub notification for object changes in a bucket. However, bucket policy changes are only logged in the audit logs._
+
 Optionally, you can configure [Sendgrid](https://sendgrid.com/) to send an email notification to your email address.
 
 Please review the code for details.
