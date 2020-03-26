@@ -1,6 +1,6 @@
-
 ### Overview
-In this example, we try to filter the log events and extract the payload. If there is a text message in the payload, we send it to the Google translation service for translation. If the translation result has the phrase we are searching for, we send a custom metric to the monitoring service. 
+
+In this example, we try to filter the log events and extract the payload. If there is a text message in the payload, we send it to the Google translation service for translation. If the translation result has the phrase we are searching for, we send a custom metric to the monitoring service.
 
 Please review the code for details.
 
@@ -69,10 +69,7 @@ gcloud logging write my-error-log "文件执行错误!"
 
 ```
 
-For each filtered log message which has our _search phrase_, it will trigger our cloud function and create a custom metric. 
+For each filtered log message which has our _search phrase_, it will trigger our cloud function and create a custom metric.
 We can create a chart in cloud monitoring and view the result, for example:
 
-![Custom metirc chart](pics/metric.png)
-
-
-
+![Custom metirc chart](./metric.png)
