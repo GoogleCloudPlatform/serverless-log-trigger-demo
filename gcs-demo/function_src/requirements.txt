@@ -1,0 +1,3 @@
+google-cloud-storage==1.26.0
+#oauth2client==4.1.3
+sendgrid==6.1.3

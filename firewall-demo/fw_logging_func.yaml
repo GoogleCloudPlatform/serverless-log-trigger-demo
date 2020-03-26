@@ -12,7 +12,7 @@ resources:
   - name: fw-logsink
     type: logsink.py
     properties:
-      projectId: REPLACE_ME_PROJECT_ID
+      projectId: shenxiang-gcp-solutions
       # When using a PubSub topic, the value must be the topic ID. The ID must
       # contain only letters (a-z, A-Z), numbers (0-9), or underscores (_).
       # The maximum length is 1,024 characters.
@@ -34,9 +34,9 @@ resources:
       timeout: 90s
       runtime: python37
       availableMemoryMb: 256
-      triggerTopic: projects/REPLACE_ME_PROJECT_ID/topics/fw_log_pubsub_topic
+      triggerTopic: projects/shenxiang-gcp-solutions/topics/fw_log_pubsub_topic
       environmentVariables:
-        PROJECT_ID: REPLACE_ME_PROJECT_ID
+        PROJECT_ID: shenxiang-gcp-solutions
         FIREWALL_WHITE_LIST1: "tcp:0.0.0.0/0:80,443"
         FIREWALL_WHITE_LIST2: "udp:0.0.0.0/0"
       localUploadPath: function_src

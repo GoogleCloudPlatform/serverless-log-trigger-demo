@@ -9,36 +9,34 @@ imports:
   - path: function_src/requirements.txt
 
 resources:
-  - name: fw-logsink
+  - name: gcs-logsink
     type: logsink.py
     properties:
       projectId: REPLACE_ME_PROJECT_ID
       # When using a PubSub topic, the value must be the topic ID. The ID must
       # contain only letters (a-z, A-Z), numbers (0-9), or underscores (_).
       # The maximum length is 1,024 characters.
-      destinationName: fw_log_pubsub_topic
+      destinationName: gcs_log_pubsub_topic
       destinationType: pubsub
       uniqueWriterIdentity: true
-      filter: resource.type="gce_firewall_rule" jsonPayload.event_type="GCE_OPERATION_DONE"
+      filter: resource.type="gcs_bucket" 
       # Properties for the pubsub destination to be created.
       pubsubProperties:
-        topic: fw_log_pubsub_topic_dest
-  - name: fw-logging-function
+        topic: gcs_log_pubsub_topic_dest
+  - name: gcs-logging-function
     metadata:
       dependsOn:
-      - fw-logsink
+      - gcs-logsink
     type: cloud_function.py
     properties:
       region: us-central1
-      entryPoint: process_firewall_log
+      entryPoint: process_bucket_audit_log
       timeout: 90s
       runtime: python37
       availableMemoryMb: 256
-      triggerTopic: projects/REPLACE_ME_PROJECT_ID/topics/fw_log_pubsub_topic
+      triggerTopic: projects/REPLACE_ME_PROJECT_ID/topics/gcs_log_pubsub_topic
       environmentVariables:
         PROJECT_ID: REPLACE_ME_PROJECT_ID
-        FIREWALL_WHITE_LIST1: "tcp:0.0.0.0/0:80,443"
-        FIREWALL_WHITE_LIST2: "udp:0.0.0.0/0"
       localUploadPath: function_src
       # sourceArchiveUrl: gs://your-precreated-bucket/cloud_logging.zip.
       # If sourceArchiveUrl, a new bucket will be created for each deployment

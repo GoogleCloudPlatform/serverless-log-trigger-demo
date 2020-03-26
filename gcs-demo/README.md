@@ -1,9 +1,6 @@
 
 ### Overview
-This example demonstrates how a GCP network firewall rule change triggers a cloud function via pubsub and the function validates the rule.
-
-The cloud function takes a list of whitelisted rules from the environment variables. If a firewall rule is created or updated that has any violation, it would be deleted automatically in near real time (within seconds).
-
+In this example, if a Cloud Storage bucket is open to public for read or write, the change will trigger a cloud function via pubsub. If the bucket is not in a whitelist(defined via an environment variable), the function will remove the IAM policy and make the bucket private.
 
 Optionally, you can configure [Sendgrid](https://sendgrid.com/) to send an email notification to your email address.
 
@@ -47,20 +44,14 @@ You can follow the instructions below in your cloud shell to test it.
 
 ```bash
 # set project id in the config file
-sed -e "s/REPLACE_ME_PROJECT_ID/$PROJECT/" logging_func.yaml > fw_logging_func.yaml
+sed -e "s/REPLACE_ME_PROJECT_ID/$PROJECT/" logging_func.yaml > gcs_logging_func.yaml
 # deploy
-gcloud deployment-manager deployments create fw-log-demo --config fw_logging_func.yaml
+gcloud deployment-manager deployments create gcs-log-demo --config gcs_logging_func.yaml
 ```
 
 ### Verify the result
 
-The default whitelisted rules from the environment variables are:
-
-FIREWALL_WHITE_LIST1: "tcp:0.0.0.0/0:80,443"
-
-FIREWALL_WHITE_LIST2: "udp:0.0.0.0/0"
-
-You can create a new firewall rule with a violation such as opening the port 20 for 0.0.0.0/0. You will see the rule being removed shortly.
+If you make your testing bucket to public, you will see the public access is gone in a few seconds.
 
 ### Enable email notification:
 
@@ -88,12 +79,12 @@ Ref: https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets
 
 NOTIFICATION_EMAIL(Required): Email address for the notification
 
-NOTIFICATION_SUBJECT(Optional): Email subject. The default is __Firewall violation detected__
+NOTIFICATION_SUBJECT(Optional): Email subject. The default is __Bucket violation detected__
 
 NOTIFICATION_SENDER(Optional): Email sender. The default is __No Reply<noreply@example.com>__
 
 You can update the deployment manager config file and update your deployment. Alternatively, you can add them via the Cloud Function console or run a command like the following:
 
 ```bash
-gcloud functions deploy --update-env-vars=NOTIFICATION_EMAIL=bob@example.com,NOTIFICATION_SUBJECT='Test email',NOTIFICATION_SENDER='noreply<noreply@example.com>' fw-logging-function
+gcloud functions deploy --update-env-vars=NOTIFICATION_EMAIL=bob@example.com,NOTIFICATION_SUBJECT='Test email',NOTIFICATION_SENDER='noreply<noreply@example.com>' logging-function
 ```
