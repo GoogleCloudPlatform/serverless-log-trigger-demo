@@ -1,6 +1,5 @@
 ### Overview
-
-In this example, we try to filter the log events and extract the payload. If there is a text message in the payload, we send it to the Google translation service for translation. If the translation result has the phrase we are searching for, we send a custom metric to the monitoring service.
+In this example, we try to filter the log events and extract text messages from the payloads. We send the text messages to the Google translation service for translation. If a translation result has the phrase we are searching for, we send a custom metric to the monitoring service.
 
 Please review the code for details.
 
@@ -24,7 +23,7 @@ You can follow the instructions below in your cloud shell to test it.
 # Enable Cloud Functions API:
   gcloud services enable cloudfunctions.googleapis.com
 
-# Enable translagte service API:
+# Enable translate service API:
   gcloud services enable translate.googleapis.com
 ```
 

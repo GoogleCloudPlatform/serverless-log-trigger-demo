@@ -171,7 +171,7 @@ def send_email(recipent, firewall_name, actor):
     from google.cloud import secretmanager
 
     # https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets
-    # Also make sure the Cloud Function service account has permissio to read the
+    # Also make sure the Cloud Function service account has permission to read the
     # secret
     client = secretmanager.SecretManagerServiceClient()
     name = client.secret_version_path(PROJECT_ID, "sendgrid-apikey", "latest")

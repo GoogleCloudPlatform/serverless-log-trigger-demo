@@ -1,8 +1,8 @@
 
 ### Overview
-In this example, if a Cloud Storage bucket is open to public for read or write, the change will trigger a cloud function via pubsub. If the bucket is not in a whitelist(defined via an environment variable), the function will remove the IAM policy and make the bucket private.
+In this example, a change made to a Cloud Storage bucket triggers a cloud function via Pub/Sub. If the change makes the bucket open to the public for read/write and the bucket is not in a whitelist(defined in an environment variable), the function removes the IAM policy and make the bucket private.
 
-_Note: You can setup pubsub notification for object changes in a bucket. However, bucket policy changes are only logged in the audit logs._
+_Note: You can setup Pub/Sub notification for object changes in a bucket. However, bucket policy changes are only logged in the audit logs._
 
 Optionally, you can configure [Sendgrid](https://sendgrid.com/) to send an email notification to your email address.
 
@@ -16,7 +16,7 @@ You can follow the instructions below in your cloud shell to test it.
 # Enable the Deployment Manager API if it's not enabled:
   gcloud services enable deploymentmanager.googleapis.com
 
-# Enable pubsub API:
+# Enable Pub/Sub API:
   gcloud services enable pubsub.googleapis.com
 
 # Enable Cloud Build API:

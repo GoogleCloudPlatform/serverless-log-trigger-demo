@@ -21,7 +21,7 @@ resources:
       uniqueWriterIdentity: true
       # Change the filter as needed
       filter: logName:(my-error-log)
-      # Properties for the pubsub destination to be created.
+      # Properties for the Pub/Sub destination to be created.
       pubsubProperties:
         topic: metric_log_pubsub_topic_dest
   - name: metric-logging-function

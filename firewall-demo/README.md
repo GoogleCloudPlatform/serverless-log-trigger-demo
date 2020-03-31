@@ -1,6 +1,6 @@
 
 ### Overview
-This example demonstrates how a GCP network firewall rule change triggers a cloud function via pubsub and the function validates the rule.
+This example demonstrates how a GCP network firewall rule change triggers a cloud function via Pub/Sub, and the function validates the rule.
 
 The cloud function takes a list of whitelisted rules from the environment variables. If a firewall rule is created or updated that has any violation, it would be deleted automatically in near real time (within seconds).
 
@@ -17,7 +17,7 @@ You can follow the instructions below in your cloud shell to test it.
 # Enable the Deployment Manager API if it's not enabled:
   gcloud services enable deploymentmanager.googleapis.com
 
-# Enable pubsub API:
+# Enable Pub/Sub API:
   gcloud services enable pubsub.googleapis.com
 
 # Enable Cloud Build API:
