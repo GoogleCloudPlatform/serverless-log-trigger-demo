@@ -81,7 +81,7 @@ def process_app_log(event, context):
     if "jsonPayload" in log_data:
         message = log_data["jsonPayload"].get("message")
     else:
-        message = log_data["textPayload"].get("textPayload")
+        message = log_data["textPayload"]
 
     target_message = ""
     if message:

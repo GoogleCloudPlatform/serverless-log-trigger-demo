@@ -50,6 +50,7 @@ sed -e "s/REPLACE_ME_PROJECT_ID/$PROJECT/" logging_func.yaml > metric_logging_fu
 # deploy
 gcloud deployment-manager deployments create metric-log-demo --config metric_logging_func.yaml
 ```
+Alternatively, you can use [Terraform](https://www.terraform.io/) to deploy the function. The `main.tf` file is a Terraform configuration example you can use.
 
 ### Verify the result
 
