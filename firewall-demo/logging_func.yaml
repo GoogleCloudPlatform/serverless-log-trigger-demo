@@ -33,7 +33,7 @@ resources:
       destinationName: fw_log_pubsub_topic
       destinationType: pubsub
       uniqueWriterIdentity: true
-      filter: resource.type="gce_firewall_rule" jsonPayload.event_type="GCE_OPERATION_DONE"
+      filter: resource.type="gce_firewall_rule" operation.last=true
       # Properties for the pubsub destination to be created.
       pubsubProperties:
         topic: fw_log_pubsub_topic_dest

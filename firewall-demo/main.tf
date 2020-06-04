@@ -60,7 +60,7 @@ resource "google_logging_project_sink" "fw_logsink" {
   destination = "pubsub.googleapis.com/projects/${var.project_id}/topics/${google_pubsub_topic.fw_log_pubsub_topic.name}"
 
   # Log all WARN or higher severity messages relating to instances
-  filter = "resource.type=\"gce_firewall_rule\" jsonPayload.event_type=\"GCE_OPERATION_DONE\""
+  filter = "resource.type=\"gce_firewall_rule\" operation.last=true"
 
   # Use a unique writer (creates a unique service account used for writing)
   unique_writer_identity = true

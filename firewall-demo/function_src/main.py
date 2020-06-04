@@ -55,15 +55,20 @@ def process_firewall_log(event, context):
     pubsub_message = base64.b64decode(event["data"]).decode("utf-8")
 
     log_data = json.loads(pubsub_message)
-    payload = log_data["jsonPayload"]
+    # Audit logs are now using protoPayload instead of jsonPayload as in the
+    # legacy activity logs
+    payload = log_data["protoPayload"]
+    # The methodName could be "beta.compute.firewalls.xxx" or
+    # "v1.compute.firewalls.xxx. So we remove the version here. 
+    method_name = ".".join(payload["methodName"].split(".")[-3:])
     if (
-        payload["resource"]["type"] == "firewall"
-        and payload["event_type"] == "GCE_OPERATION_DONE"
-        and payload["event_subtype"] in MONITOR_TYPES
+        log_data["resource"]["type"] == "gce_firewall_rule"
+        and log_data["operation"]["last"] == True
+        and method_name in MONITOR_TYPES
     ):
 
-        firewall_name = payload["resource"]["name"]
-        actor = str(payload["actor"])
+        firewall_name = payload["resourceName"].split("/")[-1]
+        actor = str(payload["authenticationInfo"])
 
         # Build a representation of the Cloud Compute API.
         # Disable caching to avoid bogus error messages
@@ -88,7 +93,7 @@ def process_firewall_log(event, context):
                 send_email(NOTIFICATION_EMAIL, firewall_name, actor)
 
     else:
-        print(f"Ignore event type:{payload['event_subtype']}")
+        print(f"Ignore event type:{payload['methodName']}")
 
 
 def check_ports(white_ports, source_ports):
