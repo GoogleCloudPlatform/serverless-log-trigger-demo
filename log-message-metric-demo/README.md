@@ -72,4 +72,4 @@ gcloud logging write my-error-log "文件执行错误!"
 For each filtered log message which has our _search phrase_, it will trigger our cloud function and create a custom metric.
 We can create a chart in cloud monitoring and view the result, for example:
 
-![Custom metirc chart](./metric.png)
+![Custom metric chart](./metric.png)

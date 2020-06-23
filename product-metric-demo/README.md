@@ -1,22 +1,12 @@
 ### Overview
-In this example, we try to filter the log events and extract the timestamp and order of the operations. We will save the data into [Cloud Firestore](https://cloud.google.com/firestore). Based on the start and end time, we will calculate the elapsed time for an async operation.
 
-In our example, we use the boolean field `first` and `last` to indicate the start and end of our operation. We also need a few more fields such as timestamp to generate the custom metric. For example:
+This example is based on a [demo eCommerce app](https://github.com/GoogleCloudPlatform/microservices-demo). You need to create a GKE cluster and deploy the app before you can try the demo code.
 
-```json
-{
-   "id":"1234567",
-   "producer":"My app",
-   "methodName":"create",
-   "timestamp":"2020-06-01T14:32:15.167Z",   
-   "first":true
-   ......
-}
-```
+In this example, we try to filter the log events and extract the recommended products. For demo purposes, we will create an individual custom metric for each recommended product. Optionally, you can also save the data into [Cloud Firestore](https://cloud.google.com/firestore). 
 
 Please review the code for details.
 
-You can follow the instructions below in your cloud shell to test it.
+After you have the demo app up and running, you can follow the instructions below in your cloud shell to test it.
 
 ### Enable needed service APIs:
 
@@ -70,21 +60,25 @@ Alternatively, you can use [Terraform](https://www.terraform.io/) to deploy the 
 
 ### Verify the result
 
-First we need send a log message to indicate the operation starts by setting the `first` field as true, for example:
+The load generator deployed should send traffic to the web application and generate metric data. However, if that doesn't happen, you can open the app and click the products and trigger the log processing.
 
-```bash
-gcloud logging write my-trace-log '{"producer": "My app", "methodName": "create", "timestamp": "2020-06-01T14:32:15.167Z", "id": "1234567", "first": true}' --payload-type=json
-```
+Any log messages match the following filter will be sent to Pub/Sub and processed by the Cloud Function.
 
-Then we will send a log message to indicate the operation completes by setting the `last` field as true(notice the different timestamps), for example:
-```bash
-gcloud logging write my-trace-log '{"producer": "My app", "methodName": "create", "timestamp": "2020-06-01T14:32:25.167Z", "id": "1234567", "last": true}' --payload-type=json
-
-```
-
-For the filtered log messages which has our _log name_, it will trigger our cloud function and create an entry in Firestore. If the data entry has both `first` and `last` fields set as true, we will calculate the time difference and send it as a custom metric to cloud monitoring.
+`labels."k8s-pod/app"="recommendationservice" AND jsonPayload.message:"[Recv ListRecommendations] product_ids="`
 
 
 When we have enough data points, we can create a chart in cloud monitoring and view the result, for example:
 
 ![Custom metric chart](./metric.png)
+
+
+If you want to save the data in Firestore, you can set the environment variable IS_SAVE_TO_FIRESTORE to true and redeploy the function. You should be able to see the data updated in Firestore in real-time. 
+
+You could also use the following command to run the `display_update.py` script, which provides real-time updates of the Firestore database too.
+
+```bash
+python3 -mvenv /tmp/venv
+source /tmp/venv/bin/activate
+pip install -r function_src/requirements.txt 
+python ./display_update.py
+```
